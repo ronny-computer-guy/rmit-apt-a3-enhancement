@@ -1,0 +1,27 @@
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): Enter the food id of the food item to remove from the menu: Item not found, please enter a valid id, example format <F0001>
+
+Enter the food id of the food item to remove from the menu: Item not found, please enter a valid id, example format <F0001>
+
+Enter the food id of the food item to remove from the menu: Item removed from Menu
+
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): 
