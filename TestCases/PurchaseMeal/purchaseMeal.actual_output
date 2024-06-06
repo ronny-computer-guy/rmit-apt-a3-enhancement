@@ -1,0 +1,70 @@
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): Please enter the ID of the food you wish to purchase: 
+You have selected "Baklava - Rich middle eastern cake of thin layers of flaky pastry filled with nuts and honey". This will cost you $8.50
+Please hand over the money - type in the value of each note/coin in cents.
+Please enter ctrl-D or enter on a new line to cancel this purchase.
+You still need to give us $ 8.50: You still need to give us $ 3.50: Your change is 1 x 50c 1 x $1 
+
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): Please enter the ID of the food you wish to purchase: 
+You have selected "Haggis - Scottish delicacy made from tripe and oats and served with whiskey sauce". This will cost you $18.70
+Please hand over the money - type in the value of each note/coin in cents.
+Please enter ctrl-D or enter on a new line to cancel this purchase.
+You still need to give us $ 18.70: Your change is 1 x 10c 1 x 20c 1 x $1 1 x $10 1 x $20 
+
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): 
+Balence Summary
+-------------
+Denom | Quantity | Value
+---------------------------
+5     |20        |$1.00
+10    |39        |$3.90
+20    |2         |$0.40
+50    |4         |$2.00
+100   |28        |$28.00
+200   |20        |$40.00
+500   |8         |$40.00
+1000  |9         |$90.00
+2000  |9         |$180.00
+5000  |11        |$550.00
+                  $935.30
+
+
+Main Menu:
+  1. Display Meal Options
+  2. Purchase Meal
+  3. Save and Exit
+Administrator-Only Menu:
+  4. Add Food
+  5. Remove Food
+  6. Display Balance
+  7. Abort Program
+Select your option (1-7): 
