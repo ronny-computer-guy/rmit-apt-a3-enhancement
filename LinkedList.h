@@ -16,7 +16,7 @@ public:
     void addBack(Node* node);
     void addFront(Node* node);
 
-    void addFoodItem(std::string id, std::string name, std::string description, unsigned dollar, unsigned cents); //adds item to list
+    void addFoodItem(std::string id, std::string name, std::string description, unsigned dollar, unsigned cents, std::string parentList); //adds item to list
     bool removeFoodItem(std::string itemId); //removes item from list
     void sortByName();//Sorts food list from A->Z (not lowercase)
 

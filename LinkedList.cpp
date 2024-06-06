@@ -88,10 +88,10 @@ void LinkedList::addFront(Node* node){
     head = node;
 }
 
-void LinkedList::addFoodItem(std::string id, std::string name, std::string description, unsigned dollar, unsigned cents){
+void LinkedList::addFoodItem(std::string id, std::string name, std::string description, unsigned dollar, unsigned cents, std::string parentList){
     //for adding a single item *note search for duplicate names.
     Node* newNode = new Node();
-    newNode->data  = new FoodItem(id, name, description, dollar, cents);
+    newNode->data  = new FoodItem(id, name, description, dollar, cents, parentList);
     addBack(newNode);
 }
 

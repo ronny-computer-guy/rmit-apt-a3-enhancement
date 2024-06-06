@@ -28,8 +28,9 @@ Adam Lee                (input 33.33%)
  **/
 void displayMainMenu();
 void loadMenuData(const std::string& fileName1, LinkedList* menu);
-void displayMealOptions(LinkedList* list);
 void loadCoinsData(const std::string& fileName, std::vector<Coin> &coins);
+void displayMealOptions(LinkedList* list);
+bool isSubmenuExisted(const std::vector<std::string>& submenu, const std::string& parentList);
 void purchaseMeal(LinkedList* menu, std::vector<Coin>& coins);
 void printCoinData(const std::vector<Coin>& coins);
 void addFoodItem(LinkedList* list);
@@ -59,14 +60,7 @@ int main(int argc, char **argv) {
     loadMenuData(argv[1], menu);
     std::vector<Coin> coins;
     loadCoinsData(argv[2], coins);
-    mainMenu(coins, menu);
-
-    delete menu;
-    return EXIT_SUCCESS;
-}
-
-// Main menu user selects possible actions from here
-void mainMenu(std::vector<Coin>& coins, LinkedList* menu){
+    // Main menu user selects possible actions from here
     bool is_running = true;
     while (is_running)
     {
@@ -74,7 +68,8 @@ void mainMenu(std::vector<Coin>& coins, LinkedList* menu){
         std::cout << std::endl;
         displayMainMenu();
         // Handle input failure
-        if (!(std::cin >> response)) { // Input validation
+        if (!(std::cin >> response)) { 
+            // Input validation
             if (std::cin.eof()) {
                 std::cout << "Error: Invalid input." << std::endl; //gives error before exit
                 is_running = false;
@@ -83,49 +78,52 @@ void mainMenu(std::vector<Coin>& coins, LinkedList* menu){
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
         } else {
-        // Display menu options
-        if (response == 1) 
-        {
-            displayMealOptions(menu);
-        }
-        // Purchase the Meal (in Progress)
-        else if (response == 2) 
-        {
-            purchaseMeal(menu, coins);
-        }
-        // Save and Exit
-        else if (response == 3) 
-        {   
-            saveAndExit(coins, menu);
-            delete menu;
-            exit(0);
-        }
-        // Add food item
-        else if (response == 4) 
-        {
-            addFoodItem(menu);
-        }
-        // Remove food item
-        else if (response == 5) 
-        {
-            removeFoodItem(menu);
-        }
-        // Display balence
-        else if (response == 6) 
-        {
-            displayBalence(coins);
-        }
-        // Abort program
-        else if (response == 7) 
-        {
-            is_running = false;
-        }
-        else{
-            std::cout << "Error: Invalid Input." << std::endl;
-        }
+            // Display menu options
+            if (response == 1) 
+            {
+                displayMealOptions(menu);
+            }
+            // Purchase the Meal (in Progress)
+            else if (response == 2) 
+            {
+                purchaseMeal(menu, coins);
+            }
+            // Save and Exit
+            else if (response == 3) 
+            {   
+                saveAndExit(coins, menu);
+                delete menu;
+                exit(0);
+            }
+            // Add food item
+            else if (response == 4) 
+            {
+                addFoodItem(menu);
+            }
+            // Remove food item
+            else if (response == 5) 
+            {
+                removeFoodItem(menu);
+            }
+            // Display balence
+            else if (response == 6) 
+            {
+                displayBalence(coins);
+            }
+            // Abort program
+            else if (response == 7) 
+            {
+                is_running = false;
+            }
+            else{
+                std::cout << "Error: Invalid Input." << std::endl;
+            }
         }
     }
+    delete menu;
+    return EXIT_SUCCESS;
 }
+
 
 // The function displays all the options available in the main menu
 void displayMainMenu() {
@@ -143,18 +141,26 @@ void displayMainMenu() {
 
 // reads food data file and breaks up the line into variables for the addFooItem() method ** WORK IN PROGRESS**
 void loadMenuData(const std::string& fileName1, LinkedList* menu){
+
     std::string line;
     std::ifstream food_data(fileName1);
-    if(!food_data.is_open()){
+
+    if(!food_data.is_open())
+    {
         std::cout << "file failed to open" << std::endl;
-    }else if(food_data.peek() == std::ifstream::traits_type::eof()){ // Checks and closes program is foods.dat is empty
+    }
+    else if(food_data.peek() == std::ifstream::traits_type::eof()) // Checks and closes program is foods.dat is empty
+    {
         std::cout << "Foods file is empty" << std::endl;
-    }else{
+    }
+    else
+    {
         while(getline(food_data, line)){
             bool check = true;
             std::istringstream iss(line);
-            std::string id, name, description, dollarsStr, centsStr;
+            std::string id, name, description, dollarsStr, centsStr, parentList;
             std::getline(iss, id, '|');
+
             if(id[0] != 'F' || id.size() < 4){
                 check = false;
             }
@@ -173,17 +179,19 @@ void loadMenuData(const std::string& fileName1, LinkedList* menu){
                     check = false;
                 }
             }
-            std::getline(iss, centsStr, '\n');
+            std::getline(iss, centsStr, '|');
             for( size_t i = 0; i < centsStr.size(); i++){
                 if(!isdigit(centsStr[i])){
                     i = centsStr.size();
                     check = false;
                 }
             }
+            std::getline(iss, parentList, '\n');
+        
             if(check){
                 unsigned int dollars = std::stoul(dollarsStr);
                 unsigned int cents = std::stoul(centsStr);
-                menu->addFoodItem(id, name, description, dollars, cents);
+                menu->addFoodItem(id, name, description, dollars, cents, parentList);
             }else{
                 std::cout << "line skipped due to possible formatting issues please check menu data file" << std::endl;
             }
@@ -331,8 +339,8 @@ void printCoinData(const std::vector<Coin>& coins){
 
 // Displays menu items
 void displayMealOptions(LinkedList* list){ 
-    //LinkedList sortedList(*list); 
-    //sortedList.sortByName(); 
+    
+    std::vector<std::string> submenu;
 
     std::cout << std::endl;
     std::cout << "Food Menu" << std::endl;
@@ -340,19 +348,55 @@ void displayMealOptions(LinkedList* list){
     std::cout << std::left << std::setw(6) << "ID" << "|" << std::setw(24) << "Name" << "|" << std::setw(7) << "Price" << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
 
+    // Print Food Item without Sublist
     for(int i = 0; i < list->size(); i++){
-        std::cout << std::left << std::setw(6) << list->get(i)->id << "|"
-         << std::setw(24) << list->get(i)->name << "|"
-         << std::setw(0) << list->get(i)->price.dollars << ".";
+        if (list->get(i)->parentList == "No"){
+            std::cout << std::left << std::setw(6) << list->get(i)->id << "|"
+            << std::setw(24) << list->get(i)->name << "|"
+            << std::setw(0) << list->get(i)->price.dollars << ".";
 
-        if (list->get(i)->price.cents < 10) {
-            std::cout << "0" << list->get(i)->price.cents;
+            if (list->get(i)->price.cents < 10) {
+                std::cout << "0" << list->get(i)->price.cents;
+            } else {
+                std::cout << list->get(i)->price.cents;
+            }
+            std::cout << std::endl;
         } else {
-            std::cout << list->get(i)->price.cents;
+            std::string parentList = list->get(i)->parentList;
+            if(!isSubmenuExisted(submenu, parentList)){
+                submenu.push_back(parentList);
+            }
         }
-        std::cout << std::endl;
     }
+    // Print Sublist
+    for (const auto& item : submenu) {
+        std::cout << item << std::endl;
+        for(int i = 0; i < list->size(); i++){
+            if (list->get(i)->parentList == item){
+                std::cout << std::left << std::setw(6) << list->get(i)->id << "|"
+                << std::setw(24) << list->get(i)->name << "|"
+                << std::setw(0) << list->get(i)->price.dollars << ".";
+                if (list->get(i)->price.cents < 10) {
+                    std::cout << "0" << list->get(i)->price.cents;
+                } else {
+                    std::cout << list->get(i)->price.cents;
+                }
+                std::cout << std::endl;
+            }
+        }
+    }
+    
     std::cout << std::endl;
+}
+
+bool isSubmenuExisted(const std::vector<std::string>& submenu, const std::string& parentList) {
+    bool isFound = false;
+    for (const auto& item : submenu) {
+        if (item == parentList) {
+            isFound = true;
+        }
+    }
+    return isFound;
 }
 
 // The function converts string into enum denomination
@@ -398,8 +442,6 @@ void addFoodItem(LinkedList* menu){
     unsigned cents = 0;
     bool is_running = false;
     
-    //std::string input;
-
     // Get last id number and increment 
     //finding last item on menu to create now id
     unsigned lastItem = menu->size() -1;
@@ -410,12 +452,12 @@ void addFoodItem(LinkedList* menu){
     std::string newIdStr = oss.str();
 
     std::cout << "This new meal item will have the Item id of " << newIdStr << "." << std::endl;
-    std::string name = EMPTY, description = EMPTY, dollarsStr = EMPTY, centsStr = EMPTY;
+    std::string name = EMPTY, description = EMPTY, dollarsStr = EMPTY, centsStr = EMPTY, parentList = EMPTY;
     bool exit = false;
     std::string input;
 
     // Loop is maintained until all fields are completed or the exit escape hatch is triggered by hitting enter on an empty input
-    while((name == EMPTY || description == EMPTY || dollarsStr == EMPTY || centsStr == EMPTY) && !exit){
+    while((name == EMPTY || description == EMPTY || dollarsStr == EMPTY || centsStr == EMPTY || parentList == EMPTY) && !exit){
         is_running = true;
         while(is_running){
             if(name == EMPTY){
@@ -488,40 +530,67 @@ void addFoodItem(LinkedList* menu){
                         dollarsStr = EMPTY;
                         centsStr = EMPTY;
                     }
-                        try{
-                            dollars = std::stoi(dollarsStr);
-                            cents = std::stoi(centsStr);
+                    try{
+                        dollars = std::stoi(dollarsStr);
+                        cents = std::stoi(centsStr);
 
-                            if(!(cents % 5 == 0)){
-                                dollarsStr = EMPTY;
-                                centsStr = EMPTY;
-                                is_running = false;
-                                std::cout << "Input cents must be multipes of 5" << std::endl;
-                            }else if (cents < 10) {
-                                std::cout << "Price entered: $" << dollars << "." << "0" << cents << std::endl;
-                            } else {
-                                std::cout << "Price entered: $" << dollars << "." << std::setw(2) << cents << std::endl;
-                            }
-
-                        }catch(const std::invalid_argument& ia){
-                            std::cout << "Invalid input, numeric format only please input in <dollars>.<cents> format" << std::endl;
+                        if(!(cents % 5 == 0)){
                             dollarsStr = EMPTY;
                             centsStr = EMPTY;
                             is_running = false;
-                        }catch(const std::out_of_range& e){
-                            std::cout << "Input out of range, please input a smaller number" << std::endl;
-                            dollarsStr = EMPTY;
-                            centsStr = EMPTY;
-                            is_running = false;
+                            std::cout << "Input cents must be multipes of 5" << std::endl;
+                        }else if (cents < 10) {
+                            std::cout << "Price entered: $" << dollars << "." << "0" << cents << std::endl;
+                        } else {
+                            std::cout << "Price entered: $" << dollars << "." << std::setw(2) << cents << std::endl;
                         }
+
+                    }catch(const std::invalid_argument& ia){
+                        std::cout << "Invalid input, numeric format only please input in <dollars>.<cents> format" << std::endl;
+                        dollarsStr = EMPTY;
+                        centsStr = EMPTY;
+                        is_running = false;
+                    }catch(const std::out_of_range& e){
+                        std::cout << "Input out of range, please input a smaller number" << std::endl;
+                        dollarsStr = EMPTY;
+                        centsStr = EMPTY;
+                        is_running = false;
+                    }
                     is_running = false;
                 }
+            } else if(parentList == EMPTY){
+                std::cout << "Enter the name of the parent list(if not, input: no): "; 
+                clearInputBuffer();
+                std::getline(std::cin, input);
+                firstLetterUppercase(input);
+                
+                if(input.empty()){
+                    exit = true;
+                    is_running = false;
+                }
+                for(size_t i = 0; i < input.size(); i++ ){
+                    if(!isalpha(input[i]) && input[i] != ' '){
+                        std::cout << "Please input alpha numeric characters only for name" << std::endl;
+                        i = input.size();
+                        input.clear();
+                        is_running = false;
+                    }
+                }
+                if(is_running){
+                    if(input.size() > NAMELEN || input.size() == 0){
+                        std::cout << "Please input a name under 40 characters" << std::endl;
+                        is_running = false;
+                    }else{
+                        parentList = input;
+                    }
+                }
+                is_running = false;
             }
         }
     }
     // create input check
     if(name != EMPTY && description != EMPTY && dollarsStr != EMPTY && centsStr != EMPTY){
-    menu->addFoodItem(newIdStr, name, description, dollars, cents);
+        menu->addFoodItem(newIdStr, name, description, dollars, cents, parentList);
     }
 }
 
@@ -702,7 +771,8 @@ void saveAndExit(std::vector<Coin>& coins, LinkedList* list){
             foodsFile  << list->get(i)->id << "|" <<
                 list->get(i)->name << "|" <<
                 list->get(i)->description << "|" <<
-                list->get(i)->price.dollars << "." << list->get(i)->price.cents << "\n";
+                list->get(i)->price.dollars << "." << list->get(i)->price.cents << "|" <<
+                list->get(i)->parentList << "\n";
         }
         foodsFile.close();
     }

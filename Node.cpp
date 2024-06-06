@@ -17,14 +17,13 @@ FoodItem::FoodItem(){
     //Default Constructor
 }
 
-FoodItem::FoodItem(const std::string& id, const std::string& name, const std::string& description, unsigned dollars, unsigned cents, unsigned on_hand){
+FoodItem::FoodItem(const std::string& id, const std::string& name, const std::string& description, unsigned dollars, unsigned cents, const std::string& parentList){
     this->id = id;
     this->name = name;
     this->description = description;
     this->price.dollars = dollars;
     this->price.cents = cents;
-    this->on_hand = on_hand;
-
+    this->parentList = parentList;
 }
 
 Node::Node(){

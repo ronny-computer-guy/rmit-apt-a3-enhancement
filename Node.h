@@ -44,7 +44,7 @@ class FoodItem
 {
 public:
     FoodItem();
-    FoodItem(const std::string& id, const std::string& name, const std::string& description, unsigned dollars, unsigned cents, unsigned on_hand = DEFAULT_FOOD_STOCK_LEVEL);
+    FoodItem(const std::string& id, const std::string& name, const std::string& description, unsigned dollars, unsigned cents, const std::string& parentList);
     //the unique id for this food item
     std::string id;
 
@@ -57,8 +57,8 @@ public:
     //the price of this food item
     Price price;
     
-    // how many of this food item do we have on hand? 
-    unsigned on_hand;    
+    //parent list for the food item
+    std::string parentList;
 };
 
 /**
