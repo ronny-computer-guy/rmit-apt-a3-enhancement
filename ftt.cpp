@@ -17,7 +17,7 @@
 **Student details and Input**
 
 Paul Dichiera s3969863 (input 33.33%)
-Yao Lin                 (input 33.33%)
+Yao Lin s3747404       (input 33.33%)
 Adam Lee                (input 33.33%)
 */
 
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
     bool is_running = true;
     while (is_running)
     {
-        int response = 0;
+        std::string response = "0";
         std::cout << std::endl;
         displayMainMenu();
         // Handle input failure
@@ -79,41 +79,44 @@ int main(int argc, char **argv) {
             }
         } else {
             // Display menu options
-            if (response == 1) 
+            if (response == "1") 
             {
                 displayMealOptions(menu);
             }
             // Purchase the Meal (in Progress)
-            else if (response == 2) 
+            else if (response == "2") 
             {
                 purchaseMeal(menu, coins);
             }
             // Save and Exit
-            else if (response == 3) 
+            else if (response == "3") 
             {   
                 saveAndExit(coins, menu);
                 delete menu;
                 exit(0);
             }
             // Add food item
-            else if (response == 4) 
+            else if (response == "4") 
             {
                 addFoodItem(menu);
             }
             // Remove food item
-            else if (response == 5) 
+            else if (response == "5") 
             {
                 removeFoodItem(menu);
             }
             // Display balence
-            else if (response == 6) 
+            else if (response == "6") 
             {
                 displayBalence(coins);
             }
             // Abort program
-            else if (response == 7) 
+            else if (response == "7") 
             {
                 is_running = false;
+            }
+            else if (response == "help"){
+               std::cout << "Current available commands can be executed: 1,2,3,4,5,6,7" << std::endl;
             }
             else{
                 std::cout << "Error: Invalid Input." << std::endl;
@@ -231,7 +234,6 @@ void loadCoinsData(const std::string& fileName, std::vector<Coin> &coins){
 }
 
 // Meal purchases and financial transactions 
-// Add availability checks and subtraction upon purpose
 void purchaseMeal(LinkedList* menu, std::vector<Coin>& coins) {
     // Asking users to choose the food item base on the ID
     std::cout << "Please enter the ID of the food you wish to purchase: ";
@@ -242,8 +244,8 @@ void purchaseMeal(LinkedList* menu, std::vector<Coin>& coins) {
     
     while (menu->findItemById(selectedId) == nullptr && !exit) {
         if(selectedId.empty()){
-        exit = true;
-        std::cout << "Purchase cancelled" << std::endl;
+            exit = true;
+            std::cout << "Purchase cancelled" << std::endl;
         }else{
             std::cout << "Invalid ID Input" << std::endl;
             std::cout << "Please enter the ID of the food you wish to purchase: ";
